@@ -25,8 +25,7 @@ const PORT = process.env.PORT || 3000;
 // ตั้งค่า middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public'))); // สำหรับไฟล์ static เช่น CSS, รูปภาพ
-
+app.use(express.static(path.join(__dirname, 'public')));
 // ตั้งค่า session
 app.use(session({
   secret: 'bitkub_secret_key',
@@ -37,13 +36,6 @@ app.use(session({
 
 // ตั้งค่า view engine เป็น EJS (หรือจะใช้ template engine อื่นๆ ก็ได้)
 app.set('view engine', 'ejs');
-
-// สมมติฐานข้อมูลผู้ใช้ (ในระบบจริงคุณจะใช้ฐานข้อมูลเช่น MongoDB หรือ MySQL)
-const users = [
-  { id: 1, username: 'user1', email: 'user1@example.com', password: 'password1' },
-  { id: 2, username: 'user2', email: 'user2@example.com', password: 'password2' }
-];
-
 // Routes
 // หน้าหลัก - ส่งไฟล์ login.html
 app.get('/', (req, res) => {
@@ -51,6 +43,15 @@ app.get('/', (req, res) => {
     res.redirect('/dashboard'); // ถ้าล็อกอินแล้วให้ไปที่ dashboard
   } else {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
+  }
+});
+
+// เพิ่ม GET route สำหรับหน้าลงทะเบียน
+app.get('/register', (req, res) => {
+  if (req.session.user) {
+    res.redirect('/dashboard'); // ถ้าล็อกอินแล้วให้ไปที่ dashboard
+  } else {
+    res.sendFile(path.join(__dirname, 'views', 'register.html'));
   }
 });
 
@@ -64,22 +65,28 @@ app.post('/login', (req, res) => {
   }
   
   // ค้นหาผู้ใช้ (ใช้ username หรือ email)
-  const user = users.find(u => (u.username === login || u.email === login) && u.password === password);
-  
-  if (user) {
-    // สร้าง session (ไม่เก็บรหัสผ่านใน session)
-    req.session.user = { id: user.id, username: user.username, email: user.email };
-    return res.status(200).json({ success: true, message: 'ล็อกอินสำเร็จ', redirect: '/dashboard' });
-  } else {
-    return res.status(401).json({ success: false, message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
-  }
+  const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
+  dbConn.query(query, [login, password], (err, results) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล' });
+    }
+
+    if (results.length > 0) {
+      // สร้าง session (ไม่เก็บรหัสผ่านใน session)
+      const user = results[0];
+      req.session.user = { id: user.id, email: user.email };
+      return res.status(200).json({ success: true, message: 'ล็อกอินสำเร็จ', redirect: '/dashboard' });
+    } else {
+      return res.status(401).json({ success: false, message: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
+    }
+  });
 });
 
 // หน้า Dashboard (ต้องล็อกอินก่อน)
 app.get('/dashboard', (req, res) => {
   if (req.session.user) {
     // ส่ง dashboard ให้ผู้ใช้ที่ล็อกอินแล้ว
-    res.send(`<h1>ยินดีต้อนรับ, ${req.session.user.username}!</h1><a href="/logout">ออกจากระบบ</a>`);
+    res.send(`<h1>ยินดีต้อนรับ, ${req.session.user.email}!</h1><a href="/logout">ออกจากระบบ</a>`);
   } else {
     // ถ้ายังไม่ได้ล็อกอิน ให้กลับไปหน้าล็อกอิน
     res.redirect('/');
@@ -105,19 +112,60 @@ app.post('/forgot-password', (req, res) => {
   }
   
   // ตรวจสอบว่ามีอีเมลนี้ในระบบหรือไม่
-  const user = users.find(u => u.email === email);
-  
-  if (user) {
-    // ในระบบจริง คุณจะส่งอีเมลสำหรับรีเซ็ตรหัสผ่าน
-    return res.status(200).json({ 
-      success: true, 
-      message: 'กรุณาตรวจสอบอีเมลของคุณสำหรับคำแนะนำในการรีเซ็ตรหัสผ่าน' 
-    });
-  } else {
-    return res.status(404).json({ success: false, message: 'ไม่พบอีเมลนี้ในระบบ' });
-  }
+  const query = 'SELECT * FROM users WHERE email = ?';
+  dbConn.query(query, [email], (err, results) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล' });
+    }
+
+    if (results.length > 0) {
+      // ในระบบจริง คุณจะส่งอีเมลสำหรับรีเซ็ตรหัสผ่าน
+      return res.status(200).json({ 
+        success: true, 
+        message: 'กรุณาตรวจสอบอีเมลของคุณสำหรับคำแนะนำในการรีเซ็ตรหัสผ่าน' 
+      });
+    } else {
+      return res.status(404).json({ success: false, message: 'ไม่พบอีเมลนี้ในระบบ' });
+    }
+  });
 });
 
+app.post('/register', (req, res) => {
+  const { email, password, confirmPassword } = req.body;
+
+  // ตรวจสอบว่าได้กรอกข้อมูลครบถ้วน
+  if (!email || !password || !confirmPassword) {
+      return res.status(400).json({ success: false, message: 'กรุณากรอกข้อมูลให้ครบถ้วน' });
+  }
+
+  // ตรวจสอบว่ารหัสผ่านและยืนยันรหัสผ่านตรงกันหรือไม่
+  if (password !== confirmPassword) {
+      return res.status(400).json({ success: false, message: 'รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน' });
+  }
+
+  // ตรวจสอบว่ามีผู้ใช้อีเมลเดียวกันอยู่แล้วหรือไม่
+  const query = 'SELECT * FROM users WHERE email = ?';
+  dbConn.query(query, [email], (err, results) => {
+      if (err) {
+          return res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล' });
+      }
+
+      if (results.length > 0) {
+          return res.status(400).json({ success: false, message: 'อีเมลนี้มีผู้ใช้งานแล้ว' });
+      }
+
+      // ถ้าไม่มี ให้สร้างผู้ใช้ใหม่
+      const insertQuery = 'INSERT INTO users (email, password) VALUES (?, ?)';
+      dbConn.query(insertQuery, [email, password], (err, result) => {
+          if (err) {
+              return res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการสมัครสมาชิก' });
+          }
+
+          // การสมัครสมาชิกเสร็จสิ้น นำผู้ใช้ไปยังหน้าล็อกอิน
+          return res.status(200).json({ success: true, message: 'สมัครสมาชิกสำเร็จ', redirect: '/' });
+      });
+  });
+});
 // เริ่มต้น server
 app.listen(PORT, () => {
   console.log(`Server กำลังทำงานที่ http://localhost:${PORT}`);
