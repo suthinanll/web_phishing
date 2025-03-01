@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมัครสมาชิก | Bitkub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Prompt', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 50px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-logo img {
+            height: 30px;
+        }
+        
+        .navbar-menu {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .navbar-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .navbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .btn-login {
+            color: #00C087;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 15px;
+        }
+        
+        .btn-register {
+            background-color: #00C087;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 15px;
+            border-radius: 4px;
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .left-section {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .right-section {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .intro-text {
+            padding-left: 15px;
+            border-left: 3px solid #00C087;
+            margin-bottom: 20px;
+        }
+        
+        .intro-text h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .intro-text p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .hero-image {
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto;
+        }
+        
+        .register-form {
+            background: white;
+            border-radius: 5px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .register-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #333;
+            text-align: left;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 400;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 15px;
+            transition: border 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #00C087;
+        }
+        
+        .password-input {
+            position: relative;
+        }
+        
+        .password-icon {
+            position: absolute;
+            right: 15px;
+            top: 13px;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .privacy-notice {
+            font-size: 13px;
+            color: #666;
+            margin: 20px 0;
+            line-height: 1.5;
+        }
+        
+        .privacy-notice a {
+            color: #00C087;
+            text-decoration: none;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #00C087;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #00A877;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .login-link a {
+            color: #00C087;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer {
+            background: #fff;
+            padding: 30px 50px;
+            border-top: 1px solid #eee;
+            margin-top: 50px;
+        }
+        
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .footer-nav h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .footer-nav a {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Bitkub_logo.jpg/1200px-Bitkub_logo.jpg" alt="Bitkub Logo" />
+
+        </div>
+        <div class="navbar-menu">
+            <a href="#">ตลาดซื้อขาย</a>
+            <a href="#">ชวนเพื่อน</a>
+            <a href="#">รีวอร์ด</a>
+            <a href="#">ข่าวสาร</a>
+            <a href="#">ช่วยเหลือ</a>
+            <a href="#">ดาวน์โหลดแอปฯ</a>
+        </div>
+        <div class="navbar-actions">
+            <a href="/" class="btn-login">เข้าสู่ระบบ</a>
+            <a href="/register" class="btn-register">สมัครใช้งานฟรี</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="left-section">
+            <div class="intro-text">
+                <h2>ก้าวไปสู่ยุคใหม่แห่งการลงทุนกับบิทคับ เว็กซ์เชนจ์</h2>
+                <p>แพลตฟอร์มซื้อขายคริปโตที่มีผู้สมัครใช้งานมากกว่า 4.5 ล้านบัญชี และมีมูลค่าการซื้อขายสูงเป็นอันดับ 1 ของไทย</p>
+            </div>
+            <div class="hero-image">
+                <img src="/pic.png" alt="Bitkub illustration" />
+
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div class="register-form">
+                <h1 class="register-title">สมัครสมาชิก</h1>
+                
+                <div id="message" class="message" style="display: none;"></div>
+                
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="email">อีเมล</label>
+                        <input type="email" id="email" name="email" required placeholder="กรอกอีเมล">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">รหัสผ่าน</label>
+                        <div class="password-input">
+                            <input type="password" id="password" name="password" required placeholder="กรอกรหัสผ่าน">
+                            <span class="password-icon" id="toggle-password">👁️</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">ยืนยันรหัสผ่าน</label>
+                        <div class="password-input">
+                            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="ยืนยันรหัสผ่าน">
+                            <span class="password-icon" id="toggle-confirm-password">👁️</span>
+                        </div>
+                    </div>
+                    
+                    <div class="privacy-notice">
+                        คุณสามารถดูรายละเอียดเกี่ยวกับการประมวลผลข้อมูลส่วนบุคคล ของคุณได้ที่นี่ <a href="#">ประกาศความเป็นส่วนตัว</a>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">สมัครสมาชิก</button>
+                    
+                    <div class="login-link">
+                        หากสมัครสมาชิกสำเร็จแล้ว <a href="/">เข้าสู่ระบบที่นี่</a>
+                    </div>
+                </form>
+            </div>
+            
+            <div style="font-size: 12px; color: #777; margin-top: 20px; text-align: center;">
+                บิทคับ เว็กซ์เชนจ์ได้รับใบอนุญาตผู้ประกอบธุรกิจสินทรัพย์ดิจิทัล จากกระทรวงการคลังและอยู่ภายใต้การกำกับดูแลโดย ก.ล.ต.
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-nav">
+            <div>
+                <h3>บริการของเรา</h3>
+                <a href="#">เว็บไซต์นี้ใช้คุกกี้</a>
+            </div>
+            <div>
+                <h3>เกี่ยวกับบิทคับ</h3>
+                <a href="#">รายละเอียดเพิ่มเติม</a>
+            </div>
+            <div>
+                <h3>ช่วยเหลือ</h3>
+                <a href="#">การตั้งค่าคุกกี้</a>
+            </div>
+            <div>
+                <h3>ประกาศและข่าวสาร</h3>
+                <a href="#">ยอมรับทั้งหมด</a>
+            </div>
+            <div>
+                <h3>อื่น ๆ</h3>
+                <a href="#">Bitkub API</a>
+            </div>
+        </div>
+    </div>
+    
+    <div style="position: fixed; bottom: 20px; right: 20px; background: #00C087; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);">
+        <span style="font-size: 24px;">💬</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('register-form');
+            const messageDiv = document.getElementById('message');
+            const togglePassword = document.getElementById('toggle-password');
+            const toggleConfirmPassword = document.getElementById('toggle-confirm-password');
+            const passwordField = document.getElementById('password');
+            const confirmPasswordField = document.getElementById('confirmPassword');
+            
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                } else {
+                    passwordField.type = 'password';
+                }
+            });
+            
+            toggleConfirmPassword.addEventListener('click', function() {
+                if (confirmPasswordField.type === 'password') {
+                    confirmPasswordField.type = 'text';
+                } else {
+                    confirmPasswordField.type = 'password';
+                }
+            });
+            
+            // Handle form submission
+            registerForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (!email || !password || !confirmPassword) {
+                    showMessage('กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showMessage('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน', 'error');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            password: password,
+                            confirmPassword: confirmPassword
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        // รอสักครู่แล้วเปลี่ยนหน้า
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 2000);
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                } catch (error) {
+                    showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
+                    console.error('Error:', error);
+                }
+            });
+            
+            // Show message function
+            function showMessage(message, type) {
+                messageDiv.textContent = message;
+                messageDiv.className = `message ${type}`;
+                messageDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
