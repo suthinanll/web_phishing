@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
   if (req.session.user) {
     res.redirect('/dashboard'); // ถ้าล็อกอินแล้วให้ไปที่ dashboard
   } else {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
   }
 });
 
@@ -51,7 +51,7 @@ app.get('/register', (req, res) => {
   if (req.session.user) {
     res.redirect('/dashboard'); // ถ้าล็อกอินแล้วให้ไปที่ dashboard
   } else {
-    res.sendFile(path.join(__dirname, 'views', 'register.html'));
+    res.sendFile(path.join(__dirname, 'public', 'register.html'));
   }
 });
 
