@@ -293,6 +293,16 @@
                 
                 <form id="register-form">
                     <div class="form-group">
+                        <label for="name">ชื่อ</label>
+                        <input type="text" id="name" name="name" required placeholder="กรอกชื่อ นามสกุล">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telephone">เบอร์</label>
+                        <input type="text" id="telephone" name="telephone" required placeholder="กรอกเบอร์โทรศัพท์" pattern="[0-9]{10}" title="กรุณากรอกเบอร์โทรศัพท์ 10 หลัก">
+                    </div>
+
+                    <div class="form-group">
                         <label for="email">อีเมล</label>
                         <input type="email" id="email" name="email" required placeholder="กรอกอีเมล">
                     </div>
@@ -301,7 +311,7 @@
                         <label for="password">รหัสผ่าน</label>
                         <div class="password-input">
                             <input type="password" id="password" name="password" required placeholder="กรอกรหัสผ่าน">
-                            <span class="password-icon" id="toggle-password">👁️</span>
+                            <span class="password-icon" id="toggle-password">👁️‍🗨️</span>
                         </div>
                     </div>
                     
@@ -309,7 +319,7 @@
                         <label for="confirmPassword">ยืนยันรหัสผ่าน</label>
                         <div class="password-input">
                             <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="ยืนยันรหัสผ่าน">
-                            <span class="password-icon" id="toggle-confirm-password">👁️</span>
+                            <span class="password-icon" id="toggle-confirm-password">👁️‍🗨️</span>
                         </div>
                     </div>
                     
@@ -326,7 +336,7 @@
             </div>
             
             <div style="font-size: 12px; color: #777; margin-top: 20px; text-align: center;">
-                บิทคับ เว็กซ์เชนจ์ได้รับใบอนุญาตผู้ประกอบธุรกิจสินทรัพย์ดิจิทัล จากกระทรวงการคลังและอยู่ภายใต้การกำกับดูแลโดย ก.ล.ต.
+                บิทคับ เอ็กซ์เชนจ์ได้รับใบอนุญาตผู้ประกอบธุรกิจสินทรัพย์ดิจิทัล จากกระทรวงการคลังและอยู่ภายใต้การกำกับดูแลโดย ก.ล.ต.
             </div>
         </div>
     </div>
@@ -390,12 +400,14 @@
             registerForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
+                const name = document.getElementById('name').value;
+                const telephone = document.getElementById('telephone').value;
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;
                 
-                if (!email || !password || !confirmPassword) {
-                    showMessage('กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
+                if (!name || !telephone || !email || !password || !confirmPassword) {
+                    showMessage('กรุณากรอกข้อมูลให้ครบถ้วน ด้วยยย', 'error');
                     return;
                 }
                 
@@ -411,6 +423,8 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
+                            name: name,
+                            telephone: telephone,
                             email: email,
                             password: password,
                             confirmPassword: confirmPassword

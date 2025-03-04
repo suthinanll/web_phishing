@@ -1,5 +1,4 @@
 // app.js - ไฟล์หลักของ Node.js application
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -40,18 +39,22 @@ app.set('view engine', 'ejs');
 // หน้าหลัก - ส่งไฟล์ login.html
 app.get('/', (req, res) => {
   if (req.session.user) {
-    res.redirect('/dashboard'); // ถ้าล็อกอินแล้วให้ไปที่ dashboard
+    console.log('req.session.user', req.session.user);
+    console.log('login');
+    res.redirect('/download.html'); // ถ้าล็อกอินแล้วให้ไปที่ dashboard
   } else {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+    // res.sendFile(path.join(__dirname, 'public', 'login.html'));
+    console.log('not login');
+    res.redirect('/login.html');
   }
 });
 
 // เพิ่ม GET route สำหรับหน้าลงทะเบียน
 app.get('/register', (req, res) => {
   if (req.session.user) {
-    res.redirect('/dashboard'); // ถ้าล็อกอินแล้วให้ไปที่ dashboard
+    res.redirect('/download.html'); // ถ้าล็อกอินแล้วให้ไปที่ dashboard
   } else {
-    res.sendFile(path.join(__dirname, 'public', 'register.html'));
+    res.redirect('/register.html');
   }
 });
 
@@ -75,7 +78,7 @@ app.post('/login', (req, res) => {
       // สร้าง session (ไม่เก็บรหัสผ่านใน session)
       const user = results[0];
       req.session.user = { id: user.id, email: user.email };
-      return res.status(200).json({ success: true, message: 'ล็อกอินสำเร็จ', redirect: '/dashboard' });
+      return res.status(200).json({ success: true, message: 'ล็อกอินสำเร็จ', redirect: 'download.html' });
     } else {
       return res.status(401).json({ success: false, message: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
     }
@@ -83,10 +86,11 @@ app.post('/login', (req, res) => {
 });
 
 // หน้า Dashboard (ต้องล็อกอินก่อน)
-app.get('/dashboard', (req, res) => {
+app.get('/index.html', (req, res) => {
   if (req.session.user) {
     // ส่ง dashboard ให้ผู้ใช้ที่ล็อกอินแล้ว
-    res.send(`<h1>ยินดีต้อนรับ, ${req.session.user.email}!</h1><a href="/logout">ออกจากระบบ</a>`);
+    // res.send(`<h1>ยินดีต้อนรับ, ${req.session.user.email}!</h1><a href="/logout">ออกจากระบบ</a>`);
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
   } else {
     // ถ้ายังไม่ได้ล็อกอิน ให้กลับไปหน้าล็อกอิน
     res.redirect('/');
@@ -130,11 +134,22 @@ app.post('/forgot-password', (req, res) => {
   });
 });
 
+app.get('/download.html', (req, res) => {
+  if (req.session.user) {
+    console.log(session.user);
+    console.log('in download');
+    res.sendFile(path.join(__dirname, 'public', 'download.html'));
+  } else {
+    res.redirect('/');
+  }
+});
+
 app.post('/register', (req, res) => {
-  const { email, password, confirmPassword } = req.body;
+  const { name, telephone,email, password, confirmPassword } = req.body;
+  console.log(req.body);
 
   // ตรวจสอบว่าได้กรอกข้อมูลครบถ้วน
-  if (!email || !password || !confirmPassword) {
+  if (!name||!telephone||!email || !password || !confirmPassword) {
       return res.status(400).json({ success: false, message: 'กรุณากรอกข้อมูลให้ครบถ้วน' });
   }
 
@@ -155,11 +170,12 @@ app.post('/register', (req, res) => {
       }
 
       // ถ้าไม่มี ให้สร้างผู้ใช้ใหม่
-      const insertQuery = 'INSERT INTO users (email, password) VALUES (?, ?)';
-      dbConn.query(insertQuery, [email, password], (err, result) => {
+      const insertQuery = 'INSERT INTO users (name, tell,email, password) VALUES (?, ?, ?, ?)';
+      dbConn.query(insertQuery, [name, telephone,email, password], (err, result) => {
           if (err) {
               return res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการสมัครสมาชิก' });
           }
+          console.log('result', result);
 
           // การสมัครสมาชิกเสร็จสิ้น นำผู้ใช้ไปยังหน้าล็อกอิน
           return res.status(200).json({ success: true, message: 'สมัครสมาชิกสำเร็จ', redirect: '/' });
@@ -168,5 +184,5 @@ app.post('/register', (req, res) => {
 });
 // เริ่มต้น server
 app.listen(PORT, () => {
-  console.log(`Server กำลังทำงานที่ http://localhost:${PORT}`);
+  console.log(`Server running in http://localhost:${PORT}`);
 });
