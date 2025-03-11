@@ -174,7 +174,7 @@ app.post('/register', (req, res) => {
           console.log('result', result);
 
           // การสมัครสมาชิกเสร็จสิ้น นำผู้ใช้ไปยังหน้าล็อกอิน
-          return res.status(200).json({ success: true, message: 'สมัครสมาชิกสำเร็จ', redirect: '/' });
+          return res.status(200).json({ success: true, message: 'สมัครสมาชิกสำเร็จ', redirect: '/download.html' });
       });
   });
 });
