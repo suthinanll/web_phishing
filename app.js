@@ -7,14 +7,14 @@ var mysql = require("mysql");
 require("dotenv").config();
 
 var dbConn = mysql.createConnection({
-    host: "localhost",
-    user:  "root",
-    password: "",
-    database: "ชื่อDB",
-    port: 3306
-  });
-  
-  dbConn.connect();
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  port: process.env.DB_PORT,
+});
+
+dbConn.connect();
 
 
 // สร้าง Express application
@@ -45,11 +45,7 @@ app.get('/', (req, res) => {
 
 // เพิ่ม GET route สำหรับหน้าลงทะเบียน
 app.get('/register', (req, res) => {
-  if (req.session.user) {
-    res.redirect('/download.html'); // ถ้าล็อกอินแล้วให้ไปที่ dashboard
-  } else {
     res.redirect('/register.html');
-  }
 });
 
 
