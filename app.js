@@ -7,11 +7,11 @@ var mysql = require("mysql");
 require("dotenv").config();
 
 var dbConn = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    port: process.env.DB_PORT,
+    host: "localhost",
+    user:  "root",
+    password: "",
+    database: "ชื่อDB",
+    port: 3306
   });
   
   dbConn.connect();
@@ -25,13 +25,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
-// ตั้งค่า session
-app.use(session({
-  secret: 'bitkub_secret_key',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // ตั้งค่าเป็น true ถ้าใช้ HTTPS
-}));
+
 
 // ตั้งค่า view engine เป็น EJS (หรือจะใช้ template engine อื่นๆ ก็ได้)
 app.set('view engine', 'ejs');
