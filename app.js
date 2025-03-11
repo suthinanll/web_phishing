@@ -58,32 +58,28 @@ app.get('/register', (req, res) => {
   }
 });
 
-// จัดการการล็อกอิน
+
+// แก้ไข API /login ให้เป็นการ INSERT ข้อมูลเข้า database
 app.post('/login', (req, res) => {
-  const { login, password } = req.body;
-  
+  const { email, password } = req.body;
+
   // ตรวจสอบว่ามีการส่งข้อมูลมาครบหรือไม่
-  if (!login || !password) {
-    return res.status(400).json({ success: false, message: 'กรุณากรอกชื่อผู้ใช้/อีเมลและรหัสผ่าน' });
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: 'กรุณากรอกอีเมลและรหัสผ่าน' });
   }
-  
-  // ค้นหาผู้ใช้ (ใช้ username หรือ email)
-  const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
-  dbConn.query(query, [login, password], (err, results) => {
+
+  // เพิ่มข้อมูลเข้า database โดยไม่มีการตรวจสอบซ้ำ
+  const insertQuery = 'INSERT INTO users (email, password) VALUES (?, ?)';
+  dbConn.query(insertQuery, [email, password], (err, result) => {
     if (err) {
-      return res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล' });
+      return res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' });
     }
 
-    if (results.length > 0) {
-      // สร้าง session (ไม่เก็บรหัสผ่านใน session)
-      const user = results[0];
-      req.session.user = { id: user.id, email: user.email };
-      return res.status(200).json({ success: true, message: 'ล็อกอินสำเร็จ', redirect: 'download.html' });
-    } else {
-      return res.status(401).json({ success: false, message: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
-    }
+    return res.status(200).json({ success: true, message: 'เข้าสู่ระบบสำเร็จ',redirect: 'download.html' });
+    
   });
 });
+
 
 // หน้า Dashboard (ต้องล็อกอินก่อน)
 app.get('/index.html', (req, res) => {

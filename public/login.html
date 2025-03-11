@@ -282,45 +282,45 @@
       const backToLoginBtn = document.getElementById('back-to-login');
       
       // Handle login form submission
-      loginForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const loginField = document.getElementById('login-field').value;
-        const passwordField = document.getElementById('password').value;
-        
-        if (!loginField || !passwordField) {
-          showMessage('กรุณากรอกชื่อผู้ใช้/อีเมลและรหัสผ่าน', 'error');
-          return;
+      document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const emailField = document.getElementById('login-field').value;
+      const passwordField = document.getElementById('password').value;
+
+      if (!emailField || !passwordField) {
+        showMessage('กรุณากรอกอีเมลและรหัสผ่าน', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: emailField,  // ✅ เปลี่ยน login เป็น email
+            password: passwordField
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showMessage(data.message, 'success');
+          setTimeout(() => {
+            window.location.href = data.redirect;
+          }, 1000);
+        } else {
+          showMessage(data.message, 'error');
         }
-        
-        try {
-          const response = await fetch('/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              login: loginField,
-              password: passwordField
-            })
-          });
-          
-          const data = await response.json();
-          
-          if (data.success) {
-            showMessage(data.message, 'success');
-            // Wait a moment and then redirect
-            setTimeout(() => {
-              window.location.href = data.redirect;
-            }, 1000);
-          } else {
-            showMessage(data.message, 'error');
-          }
-        } catch (error) {
-          showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
-          console.error('Error:', error);
-        }
-      });
+      } catch (error) {
+        showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
+        console.error('Error:', error);
+      }
+    });
+
       
       // Handle forgot password link click
       forgotPasswordLink.addEventListener('click', function(e) {
